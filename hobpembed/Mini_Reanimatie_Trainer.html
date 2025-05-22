@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Reanimatie Trainer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+      padding: 2em;
+    }
+    #content {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 2em;
+      border-radius: 1em;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 1em;
+      font-size: 1.2em;
+      margin: 1em;
+      cursor: pointer;
+      border: none;
+      border-radius: 0.5em;
+      background-color: #97D700;
+      color: white;
+      opacity: 1;
+      transition: opacity 0.25s ease;
+    }
+    .compressie {
+      width: 100px;
+      height: 100px;
+      margin: 2em auto;
+      background: red;
+      border-radius: 50%;
+      animation: compress 0.5s infinite;
+      display: none;
+    }
+    @keyframes compress {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.85); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div id="content">
+    <h1>Mini Reanimatie Trainer</h1>
+    <div id="step"></div>
+    <div class="compressie" id="compressie"></div>
+    <button id="mainButton" onclick="volgendeStap()">Volgende stap</button>
+    <audio id="beat">
+      <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+    </audio>
+  </div>
+
+  <script>
+    const stappen = [
+      "Controleer of iemand bewusteloos is.",
+      "Bel 112 of laat iemand bellen.",
+      "Leg het slachtoffer op een harde ondergrond.",
+      "Start met 30 borstcompressies in het midden van de borstkas.",
+      "Blaas 2 keer lucht in (mond-op-mond beademing).",
+      "Herhaal: 30 compressies en 2 beademingen."
+    ];
+
+    let huidigeStap = 0;
+    const stapDiv = document.getElementById('step');
+    const compressie = document.getElementById('compressie');
+    const beat = document.getElementById('beat');
+    const mainButton = document.getElementById('mainButton');
+    let beatInterval;
+
+    function startBeat() {
+      beatInterval = setInterval(() => {
+        beat.currentTime = 0;
+        beat.play();
+      }, 500); // 2x per seconde
+    }
+
+    function stopBeat() {
+      clearInterval(beatInterval);
+      beat.pause();
+    }
+
+    function volgendeStap() {
+      if (huidigeStap < stappen.length) {
+        stapDiv.textContent = stappen[huidigeStap];
+        if (huidigeStap === 3) {
+          compressie.style.display = 'block';
+          startBeat();
+        } else {
+          compressie.style.display = 'none';
+          stopBeat();
+        }
+        huidigeStap++;
+        if (huidigeStap === stappen.length) {
+          mainButton.style.display = 'none';
+          setTimeout(() => {
+            mainButton.textContent = "Begin opnieuw ↺";
+            mainButton.onclick = beginOpnieuw;
+            mainButton.style.opacity = '0';
+            mainButton.style.display = 'inline-block';
+            setTimeout(() => {
+              mainButton.style.opacity = '1';
+            }, 50); // kleine delay om fade effect correct te starten
+          }, 1500);
+        }
+      }
+    }
+
+    function beginOpnieuw() {
+      huidigeStap = 0;
+      mainButton.textContent = "Volgende stap";
+      mainButton.onclick = volgendeStap;
+      compressie.style.display = 'none';
+      stopBeat();
+      volgendeStap();
+    }
+
+    // Start met eerste stap
+    volgendeStap();
+  </script>
+</body>
+</html>
