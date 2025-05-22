@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drie Kolommen</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background-color: white;
+      padding: 0.5em;
+      display: flex;
+      align-items: flex-start;
+      height: 60px;
+    }
+
+    .header img {
+      height: 100%;
+      width: auto;
+    }
+
+    .balk {
+      height: 40px;
+      background-color: #4B4B4B;
+      width: 100%;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .kolom {
+      flex: 1;
+      color: white;
+      font-size: 2em;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      overflow-y: auto;
+      padding: 1em;
+    }
+
+    .blauw {
+      background-color: #6699cc;
+    }
+
+    .groen {
+      background-color: #7cbf91;
+    }
+
+    .oranje {
+      background-color: #ffbb66;
+    }
+
+    .kolom img {
+      max-width: 70%;
+      height: auto;
+      margin: 15px auto 0.5em;
+      display: block;
+    }
+
+    .knop {
+      background-color: white;
+      color: #4B4B4B;
+      border: none;
+      margin: 0.5em 0;
+      font-size: 0.75em;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+      height: 2.5em;
+      line-height: 1;
+      transition: background-color 0.3s, color 0.3s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 0.5em;
+      white-space: nowrap;
+    }
+
+    .knop span {
+      border-top: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      padding: 0.1em 0;
+    }
+
+    .knop:hover {
+      background-color: #4B4B4B;
+      color: white;
+    }
+
+    .knop:active {
+      transform: scale(0.95);
+    }
+
+    .ondertekst {
+      font-size: 0.5em;
+      font-weight: normal;
+      margin-bottom: 0.5em;
+      text-align: center;
+    }
+  </style>
+  <script>
+    window.onload = function () {
+      const spans = document.querySelectorAll('.knop span');
+      spans.forEach(span => {
+        let fontSize = 0.75;
+        span.style.fontSize = fontSize + 'em';
+        const button = span.parentElement;
+        const height = button.clientHeight;
+        while ((button.scrollWidth > button.clientWidth || button.scrollHeight > height) && fontSize > 0.4) {
+          fontSize -= 0.05;
+          span.style.fontSize = fontSize + 'em';
+        }
+        button.style.height = '1.0em';
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="header">
+    <img src="indexassets/kadastergithublogo.png" alt="Kadaster Logo">
+  </div>
+
+  <div class="balk"></div>
+
+  <div class="container">
+    <div class="kolom blauw">
+      <img src="indexassets/studdylogo.png" alt="Studdy Logo">
+
+      <button class="knop" onclick="location.href='[NAME].html'"><span>-</span></button>
+      <div class="ondertekst">Cursus: X</div>
+      <div class="ondertekst">Sectie: 0</div>
+      <div class="ondertekst">Pagina: 0</div>
+<!-- 
+      <button class="knop" onclick="location.href='[NAME].html'"><span>[NAME]</span></button>
+      <div class="ondertekst">Cursus: X</div>
+      <div class="ondertekst">Sectie: 0</div>
+      <div class="ondertekst">Pagina: 0</div>
+-->      
+    </div>
+
+    <div class="kolom groen">
+      <img src="indexassets/hobplogo.png" alt="Hobp Logo">
+
+      <button class="knop" onclick="location.href='[NAME].html'"><span>-</span></button>
+      <div class="ondertekst">Cursus: X</div>
+      <div class="ondertekst">Sectie: 0</div>
+      <div class="ondertekst">Pagina: 0</div>
+<!-- 
+      <button class="knop" onclick="location.href='[NAME].html'"><span>[NAME]</span></button>
+      <div class="ondertekst">Cursus: X</div>
+      <div class="ondertekst">Sectie: 0</div>
+      <div class="ondertekst">Pagina: 0</div>
+-->      
+    </div>
+
+    <div class="kolom oranje">
+      <img src="indexassets/profijtlogo.png" alt="Profijt Logo">
+
+      <button class="knop" onclick="location.href='Digitale_Vaardigheden_1_3_S2_P4.html'"><span>Wachtwoord Veiligheid</span></button>
+      <div class="ondertekst">Cursus: Digitale Vaardigheden 1.3 - Digitale Veiligheid en Bescherming</div>
+      <div class="ondertekst">Sectie: 2</div>
+      <div class="ondertekst">Pagina: 4</div>
+<!-- 
+      <button class="knop" onclick="location.href='[NAME].html'"><span>[NAME]</span></button>
+      <div class="ondertekst">Cursus: X</div>
+      <div class="ondertekst">Sectie: 0</div>
+      <div class="ondertekst">Pagina: 0</div>
+-->
+    
+</div>
+  </div>
+</body>
+</html>

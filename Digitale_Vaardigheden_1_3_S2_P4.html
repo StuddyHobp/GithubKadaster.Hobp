@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .groen {
+            color: green;
+        }
+
+        .rood {
+            color: red;
+        }
+
+        #wachtwoord-container {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .container-rood {
+            background-color: #f8d7da;
+        }
+
+        .container-groen {
+            background-color: #d4edda;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            width: 250px;
+        }
+
+        .subtekst {
+            font-size: 0.85em;
+            color: #555;
+            margin-top: -10px;
+        }
+
+        .vereisten {
+            max-width: 300px;
+            margin: 20px auto;
+            text-align: left;
+        }
+
+        .vereisten p {
+            margin: 5px 0;
+        }
+
+        .icoon {
+            display: inline-block;
+            width: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div id="wachtwoord-container" class="container-rood">
+        <h1>Test je wachtwoord</h1>
+        <p class="subtekst">Je wachtwoord testen kan hier veilig, want wij slaan hem nergens op!</p>
+        <input type="text" id="wachtwoord" placeholder="Typ hier je wachtwoord">
+    </div>
+
+    <div class="vereisten">
+        <p id="vereiste-lengte" class="rood"><span class="icoon">❌</span>10 tekens</p>
+        <p id="vereiste-hoofdletter" class="rood"><span class="icoon">❌</span>Hoofdletter</p>
+        <p id="vereiste-kleineletter" class="rood"><span class="icoon">❌</span>Kleine letter</p>
+        <p id="vereiste-cijfer" class="rood"><span class="icoon">❌</span>Cijfer</p>
+        <p id="vereiste-speciaal" class="rood"><span class="icoon">❌</span>Speciaal teken</p>
+    </div>
+
+    <script>
+    const input = document.getElementById('wachtwoord');
+    const container = document.getElementById('wachtwoord-container');
+    const titel = container.querySelector('h1');
+
+    const regels = [
+        { id: 'vereiste-lengte', test: val => val.length >= 10 },
+        { id: 'vereiste-hoofdletter', test: val => /[A-Z]/.test(val) },
+        { id: 'vereiste-kleineletter', test: val => /[a-z]/.test(val) },
+        { id: 'vereiste-cijfer', test: val => /[0-9]/.test(val) },
+        { id: 'vereiste-speciaal', test: val => /[^A-Za-z0-9]/.test(val) }
+    ];
+
+    input.addEventListener('input', function () {
+        const waarde = input.value;
+        let allesGoed = true;
+
+        regels.forEach(regel => {
+            const element = document.getElementById(regel.id);
+            const icoon = element.querySelector('.icoon');
+            const geslaagd = regel.test(waarde);
+
+            if (geslaagd) {
+                element.classList.remove('rood');
+                element.classList.add('groen');
+                icoon.textContent = '✅';
+            } else {
+                element.classList.remove('groen');
+                element.classList.add('rood');
+                icoon.textContent = '❌';
+                allesGoed = false;
+            }
+        });
+
+        container.classList.toggle('container-groen', allesGoed);
+        container.classList.toggle('container-rood', !allesGoed);
+        titel.textContent = allesGoed ? 'Dit wachtwoord is VEILIG!' : 'Test je wachtwoord';
+    });
+</script>
+</body>
+</html>
