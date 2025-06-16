@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SugarCrush</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: #fff0f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: scale(1.1);
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      touch-action: manipulation;
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .logo-title img {
+      height: 44px;
+    }
+
+    .logo-title h1 {
+      font-size: 44px;
+      color: #ED3120;
+      text-shadow: 2px 2px #ffc0cb;
+      margin: 0;
+    }
+
+    #card {
+      width: 330px;
+      height: 440px;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 1;
+    }
+
+    #card.fade-in {
+      opacity: 0;
+      animation: fadeIn 0.6s forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .swipe-left {
+      transform: translateX(-400px) rotate(-20deg);
+      opacity: 0;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+
+    .swipe-right {
+      transform: translateX(400px) rotate(20deg);
+      opacity: 0;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+
+    #card img {
+      max-width: 88%;
+      height: auto;
+      margin: 0 auto;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    #name {
+      font-size: 26px;
+      margin: 22px 0;
+      color: #ED3120;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .buttons {
+      margin-top: 22px;
+      transition: opacity 0.4s ease;
+    }
+
+    .buttons.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .btn {
+      padding: 11px 22px;
+      margin: 0 11px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .btn-like {
+      background-color: #ff69b4;
+      color: white;
+    }
+
+    .btn-dislike {
+      background-color: #ccc;
+      color: #333;
+    }
+
+    #heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 70px;
+      color: red;
+      opacity: 0;
+      pointer-events: none;
+      animation: none;
+    }
+
+    #heart.show {
+      animation: popHeart 1s ease-out forwards;
+    }
+
+    @keyframes popHeart {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-title">
+    <img src="https://cdn.worldvectorlogo.com/logos/ola-6.svg" alt="Ola logo">
+    <h1>SugarCrush</h1>
+  </div>
+  <div id="card">
+    <img id="image" src="" alt="IJsje">
+    <div id="name"></div>
+  </div>
+  <div class="buttons" id="buttons">
+    <button class="btn btn-dislike" onclick="swipe('dislike')">Niet lekker</button>
+    <button class="btn btn-like" onclick="swipe('like')">Lekker</button>
+  </div>
+  <div id="heart">❤️</div>
+
+  <script>
+    const ijsjes = [
+      { naam: "Raketje", afbeelding: "https://assets.unileversolutions.com/v1/1220447.png?" },
+      { naam: "Magnum", afbeelding: "https://assets.unileversolutions.com/v1/1390725.jpg?" },
+      { naam: "Peren Ijsje", afbeelding: "https://assets.unileversolutions.com/v1/1220448.png?" },
+      { naam: "Split", afbeelding: "https://assets.unileversolutions.com/v1/89938985.png?" },
+      { naam: "Aardbeien Ijsje", afbeelding: "https://avondwinkelpapillon.nl/763-large_default/ola-festini-aardbei-50-ml.jpg" },
+      { naam: "Solero", afbeelding: "https://ijsexpress.nl/wp-content/uploads/40020-OLA-Solero.png" },
+      { naam: "Cornetto", afbeelding: "https://diepvriesshop.com/wp-content/uploads/2025/01/05412121046976_C1N1_s01_v01-scaled-1.jpg" },
+      { naam: "Calippo", afbeelding: "https://ijsijs.nl/wp-content/uploads/2024/04/calippo-cola.png" },
+      { naam: "Super Twister", afbeelding: "https://assets.unileversolutions.com/v1/1220437.png" }
+    ];
+
+    let index = 0;
+
+    function toonIJsje() {
+      const card = document.getElementById('card');
+      const buttons = document.getElementById('buttons');
+
+      if (index >= ijsjes.length) {
+        card.innerHTML = '<h2>Klaar met swipen!</h2>';
+        card.className = 'fade-in';
+        buttons.classList.add('hidden');
+        return;
+      }
+
+      const ijsje = ijsjes[index];
+      card.innerHTML = `
+        <img id="image" src="${ijsje.afbeelding}" alt="IJsje">
+        <div id="name">${ijsje.naam}</div>
+      `;
+      card.className = 'fade-in';
+      buttons.classList.remove('hidden');
+
+      addSwipeListeners();
+    }
+
+    function swipe(keuze) {
+      const card = document.getElementById('card');
+      const animatieKlasse = keuze === 'like' ? 'swipe-right' : 'swipe-left';
+      card.className = animatieKlasse;
+
+      if (keuze === 'like') {
+        const heart = document.getElementById('heart');
+        heart.classList.remove('show');
+        void heart.offsetWidth; // trigger reflow
+        heart.classList.add('show');
+      }
+
+      console.log(`Gebruiker vond ${ijsjes[index].naam} ${keuze === 'like' ? 'lekker' : 'niet lekker'}.`);
+
+      setTimeout(() => {
+        index++;
+        toonIJsje();
+      }, 600);
+    }
+
+    function addSwipeListeners() {
+      const card = document.getElementById('card');
+      let startX = null;
+
+      card.addEventListener('mousedown', (e) => startX = e.clientX);
+      card.addEventListener('mouseup', (e) => {
+        if (startX !== null) handleSwipeEnd(e.clientX);
+      });
+
+      card.addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
+      card.addEventListener('touchend', (e) => {
+        if (startX !== null) handleSwipeEnd(e.changedTouches[0].clientX);
+      });
+
+      function handleSwipeEnd(endX) {
+        const deltaX = endX - startX;
+        if (deltaX > 100) swipe('like');
+        else if (deltaX < -100) swipe('dislike');
+        startX = null;
+      }
+    }
+
+    // Start
+    toonIJsje();
+  </script>
+</body>
+</html>
