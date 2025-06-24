@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoekopdracht oefenen</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 2em;
+      text-align: center;
+    }
+    .google-logo {
+      font-size: 2.5em;
+      color: #4285F4;
+      margin-bottom: 0.2em;
+      font-weight: bold;
+    }
+    .google-logo span:nth-child(2) { color: #EA4335; }
+    .google-logo span:nth-child(3) { color: #FBBC05; }
+    .google-logo span:nth-child(4) { color: #4285F4; }
+    .google-logo span:nth-child(5) { color: #34A853; }
+    .google-logo span:nth-child(6) { color: #EA4335; }
+
+    .instruction {
+      font-size: 1em;
+      color: #555;
+      margin-bottom: 2em;
+    }
+
+    .query-options, .results-list {
+      max-width: 600px;
+      margin: 1.5em auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+    .btn {
+      padding: 0.8em;
+      background-color: #f2f2f2;
+      border: 1px solid #dcdcdc;
+      border-radius: 5px;
+      text-align: left;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #e8e8e8;
+    }
+    .search-results {
+      text-align: left;
+    }
+    .result {
+      margin-bottom: 1.5em;
+    }
+    .result-title {
+      color: #1a0dab;
+      font-size: 1.1em;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .result-url {
+      color: #006621;
+      font-size: 0.9em;
+    }
+    .result-snippet {
+      font-size: 0.95em;
+      color: #545454;
+    }
+    .message {
+      margin-top: 1.5em;
+      font-weight: bold;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="google-logo">
+    <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+  </div>
+  <div class="instruction">
+    Kies eerst de beste zoekopdracht. Daarna zie je een lijst met zoekresultaten. Klik op het resultaat dat het beste past bij de zoekvraag.
+  </div>
+
+  <div id="step1" class="query-options">
+    <h3>Kies de beste zoekopdracht:</h3>
+    <button class="btn" onclick="checkQuery(false)">Wat doet een magnetron en hoe werkt het precies?</button>
+    <button class="btn" onclick="checkQuery(true)">Hoe werkt een magnetron</button>
+    <button class="btn" onclick="checkQuery(false)">Magnetron aanbiedingen goedkoop kopen</button>
+    <button class="btn" onclick="checkQuery(false)">Magnetron recepten makkelijk</button>
+  </div>
+
+  <div id="step2" class="results-list" style="display:none;">
+    <h3>Zoekresultaten:</h3>
+    <div class="instruction">
+      Klik op het zoekresultaat dat het beste antwoord geeft op de vraag: "Hoe werkt een magnetron?"
+    </div>
+    <div class="search-results">
+      <div class="result" onclick="checkResult(false)">
+        <div class="result-title">Nieuwe magnetrons vergelijken – Kieskeurig.nl</div>
+        <div class="result-url">www.kieskeurig.nl/magnetrons</div>
+        <div class="result-snippet">Bekijk en vergelijk de nieuwste magnetronmodellen van 2025. Prijzen en reviews.</div>
+      </div>
+      <div class="result" onclick="checkResult(true)">
+        <div class="result-title">Hoe werkt een magnetron? – Techniek uitgelegd</div>
+        <div class="result-url">www.uitlegtechniek.nl/magnetron</div>
+        <div class="result-snippet">Een eenvoudige uitleg over hoe een magnetron werkt en wat er precies gebeurt in de oven.</div>
+      </div>
+      <div class="result" onclick="checkResult(false)">
+        <div class="result-title">Top 10 makkelijke magnetronrecepten – Smulweb</div>
+        <div class="result-url">www.smulweb.nl/recepten</div>
+        <div class="result-snippet">Van mug cakes tot kant-en-klare maaltijden: de lekkerste gerechten voor in de magnetron.</div>
+      </div>
+      <div class="result" onclick="checkResult(false)">
+        <div class="result-title">Magnetrons kopen? – Mediamarkt</div>
+        <div class="result-url">www.mediamarkt.nl/magnetrons</div>
+        <div class="result-snippet">Bestel je nieuwe magnetron vandaag nog met 10% korting en gratis bezorging.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="message" class="message"></div>
+
+  <script>
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const message = document.getElementById('message');
+
+    function checkQuery(correct) {
+      if (correct) {
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+        message.textContent = '';
+      } else {
+        message.textContent = '❌ Dit is niet de beste zoekopdracht. Probeer het opnieuw.';
+      }
+    }
+
+    function checkResult(correct) {
+      if (correct) {
+        message.style.color = 'green';
+        message.textContent = '✅ Goed gedaan! Dit is het juiste zoekresultaat.';
+        step2.style.display = 'none';
+      } else {
+        message.style.color = 'red';
+        message.textContent = '❌ Dit is niet het juiste resultaat. Je moet opnieuw beginnen.';
+        step2.style.display = 'none';
+        step1.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
