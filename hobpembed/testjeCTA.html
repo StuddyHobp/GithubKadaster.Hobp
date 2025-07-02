@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Test je CTA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      color: #333;
+    }
+
+    select {
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      min-width: 140px;
+    }
+
+    .preview {
+      background: #fff;
+      padding: 40px 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .cta {
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    @media (max-width: 500px) {
+      .preview {
+        padding: 30px 15px;
+      }
+      .cta {
+        width: 100%;
+      }
+      select {
+        min-width: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Test je CTA</h2>
+  <p style="text-align: center; color: #555;">Pas kleur, tekst en achtergrond aan en zie hoe opvallend jouw call-to-action is.</p>
+
+  <div class="controls">
+    <label>
+      Kleur knop:
+      <select id="colorSelect">
+        <option value="orange">Oranje</option>
+        <option value="blue">Blauw</option>
+        <option value="green">Groen</option>
+        <option value="grey">Grijs</option>
+      </select>
+    </label>
+
+    <label>
+      Tekst knop:
+      <select id="textSelect">
+        <option value="Bestel nu!">Bestel nu!</option>
+        <option value="Meer info">Meer info</option>
+        <option value="Vraag offerte aan">Vraag offerte aan</option>
+      </select>
+    </label>
+
+    <label>
+      Achtergrond:
+      <select id="bgSelect">
+        <option value="white">Licht</option>
+        <option value="black">Donker</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="preview" id="preview">
+    <button class="cta" id="ctaButton" style="background: orange; color: white;">Bestel nu!</button>
+    <div class="feedback" id="feedback">Deze knop valt sterk op door kleurcontrast.</div>
+  </div>
+
+  <script>
+    const colorSelect = document.getElementById('colorSelect');
+    const textSelect = document.getElementById('textSelect');
+    const bgSelect = document.getElementById('bgSelect');
+    const ctaButton = document.getElementById('ctaButton');
+    const preview = document.getElementById('preview');
+    const feedback = document.getElementById('feedback');
+
+    function updateCTA() {
+      const color = colorSelect.value;
+      const text = textSelect.value;
+      const bg = bgSelect.value;
+
+      ctaButton.style.background = color;
+      ctaButton.textContent = text;
+      preview.style.background = bg === 'white' ? '#fff' : '#333';
+
+      if (bg === 'black') {
+        ctaButton.style.color = (color === 'grey') ? '#000' : '#fff';
+      } else {
+        ctaButton.style.color = (color === 'grey') ? '#000' : '#fff';
+      }
+
+      // Feedback
+      if ((bg === 'white' && color === 'grey') || (bg === 'black' && color === 'blue')) {
+        feedback.textContent = 'Let op: deze knop valt weg tegen de achtergrond.';
+        feedback.style.color = '#d9534f';
+      } else {
+        feedback.textContent = 'Deze knop valt sterk op door kleurcontrast.';
+        feedback.style.color = '#5cb85c';
+      }
+    }
+
+    colorSelect.addEventListener('change', updateCTA);
+    textSelect.addEventListener('change', updateCTA);
+    bgSelect.addEventListener('change', updateCTA);
+  </script>
+</body>
+</html>
