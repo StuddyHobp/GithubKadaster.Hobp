@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DISC Cirkel</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+      font-family: sans-serif;
+    }
+    .circle {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      overflow: visible;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .quadrant {
+      width: 50%;
+      height: 50%;
+      transition: transform 0.2s;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+    }
+    .quadrant:hover {
+      transform: scale(1.15);
+      z-index: 2;
+    }
+    .top-left {
+      background: #d32f2f;
+      border-top-left-radius: 100% 100%;
+      transform-origin: top left;
+    }
+    .top-right {
+      background: #fbc02d;
+      border-top-right-radius: 100% 100%;
+      transform-origin: top right;
+      color: white;
+    }
+    .bottom-left {
+      background: #1976d2;
+      border-bottom-left-radius: 100% 100%;
+      transform-origin: bottom left;
+    }
+    .bottom-right {
+      background: #388e3c;
+      border-bottom-right-radius: 100% 100%;
+      transform-origin: bottom right;
+    }
+    .info-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 600px;
+      background: white;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 2rem;
+      z-index: 3;
+      border-radius: 1rem;
+      text-align: center;
+    }
+    .info-box.red { background: #d32f2f; color: white; }
+    .info-box.yellow { background: #fbc02d; color: white; }
+    .info-box.blue { background: #1976d2; color: white; }
+    .info-box.green { background: #388e3c; color: white; }
+  </style>
+</head>
+<body>
+  <div class="circle">
+    <div class="quadrant top-left" onclick="showInfo('red')">D</div>
+    <div class="quadrant top-right" onclick="showInfo('yellow')">I</div>
+    <div class="quadrant bottom-left" onclick="showInfo('blue')">C</div>
+    <div class="quadrant bottom-right" onclick="showInfo('green')">S</div>
+  </div>
+
+  <div class="info-box red" id="info-red">
+    <h2>Dominantie (Rood)</h2>
+    <p>Jij bent resultaatgericht, vastberaden en direct. Je gaat graag uitdagingen aan en schrikt niet terug voor risico’s. Je neemt snel beslissingen en hebt een sterke wil om doelen te bereiken. In een competitieve omgeving kom jij het beste tot je recht. Je verwacht snelheid en toewijding van anderen, net zoals jij dat zelf toont. Let er wel op dat je soms wat bot kunt overkomen. Je bent een geboren leider, maar het is belangrijk dat je ook aandacht hebt voor de samenwerking met anderen.</p>
+  </div>
+  <div class="info-box yellow" id="info-yellow">
+    <h2>Invloed (Geel)</h2>
+    <p>Jij bent enthousiast, sociaal en motiverend. Je krijgt energie van contact met anderen en weet mensen te inspireren met jouw optimisme. Jij bent sterk in het opbouwen van relaties en houdt van samenwerken. Creatieve en dynamische omgevingen passen goed bij jou. Je hebt een natuurlijke charme en kunt goed overtuigen. Let er wel op dat je niet te veel hooi op je vork neemt of snel afgeleid raakt. Structuur en details zijn soms minder jouw ding, maar jouw kracht ligt in het verbinden en enthousiasmeren van anderen.</p>
+  </div>
+  <div class="info-box blue" id="info-blue">
+    <h2>Consciëntieus (Blauw)</h2>
+    <p>Jij bent analytisch, nauwkeurig en houdt van duidelijkheid. Je hebt oog voor detail en werkt het liefst in een gestructureerde omgeving. Je neemt beslissingen op basis van logica en feiten en streeft naar kwaliteit en perfectie. Jij bent betrouwbaar en werkt methodisch. Plotselinge veranderingen kunnen je uit balans brengen, omdat je graag goed voorbereid te werk gaat. Jij bent een denker en een planner, en je toegevoegde waarde ligt in jouw zorgvuldigheid en je streven naar een foutloos resultaat.</p>
+  </div>
+  <div class="info-box green" id="info-green">
+    <h2>Stabiliteit (Groen)</h2>
+    <p>Jij bent loyaal, geduldig en een echte teamspeler. Je houdt van rust, zekerheid en harmonie. Je luistert goed naar anderen en bent vaak de stabiele factor binnen een groep. Jij voelt je prettig in een voorspelbare omgeving en houdt niet van plotselinge veranderingen. Mensen vertrouwen op jou vanwege je betrouwbaarheid en rustige aanwezigheid. Je werkt graag ondersteunend en helpt anderen om zich op hun gemak te voelen. Jij bent zorgzaam, empathisch en gericht op samenwerking in plaats van competitie.</p>
+  </div>
+
+  <script>
+    function showInfo(color) {
+      document.querySelectorAll('.info-box').forEach(box => box.style.display = 'none');
+      document.getElementById(`info-${color}`).style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
