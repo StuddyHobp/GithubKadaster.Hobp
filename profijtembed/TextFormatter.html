@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tekst Aanpasser</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      transition: background-color 0.4s ease;
+      padding: 40px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    select, input[type="checkbox"], textarea, button {
+      margin-right: 10px;
+    }
+
+    .checkboxes label {
+      display: inline-block;
+      margin-right: 15px;
+    }
+
+    #preview {
+      margin-top: 25px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fafafa;
+      text-align: center;
+      min-height: 50px;
+    }
+
+    #feedback {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    textarea {
+      width: 100%;
+      height: 60px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Specifieke stijlen voor duidelijkheid bij rood */
+    .feedback-ok {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .feedback-bad {
+      background-color: rgba(0, 0, 0, 0.6);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="form-group">
+      <label for="customText">Voer je eigen tekst in:</label>
+      <textarea id="customText" placeholder="Typ hier je tekst...">Dit is voorbeeldtekst</textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="fontSelect">Lettertype:</label>
+      <select id="fontSelect">
+        <option value="Arial">Arial</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Comic Sans MS">Comic Sans</option>
+        <option value="Times New Roman">Times New Roman</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="sizeSelect">Tekstgrootte:</label>
+      <select id="sizeSelect">
+        <option value="14px">Klein</option>
+        <option value="18px" selected>Normaal</option>
+        <option value="24px">Groot</option>
+        <option value="30px">Extra Groot</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="colorSelect">Tekstkleur:</label>
+      <select id="colorSelect">
+        <option value="#000000">Zwart</option>
+        <option value="#333366">Donkerblauw</option>
+        <option value="#555555">Grijs</option>
+        <option value="#FF0000">Rood</option>
+        <option value="#008000">Groen</option>
+        <option value="#FF69B4">Roze</option>
+      </select>
+    </div>
+
+    <div class="form-group checkboxes">
+      <label><input type="checkbox" id="boldCheck"> Vetgedrukt</label>
+      <label><input type="checkbox" id="italicCheck"> Cursief</label>
+      <label><input type="checkbox" id="underlineCheck"> Onderstreept</label>
+    </div>
+
+    <button onclick="resetForm()">Reset</button>
+
+    <div id="preview"></div>
+    <div id="feedback"></div>
+
+  </div>
+
+  <script>
+    const fontSelect = document.getElementById('fontSelect');
+    const sizeSelect = document.getElementById('sizeSelect');
+    const colorSelect = document.getElementById('colorSelect');
+    const boldCheck = document.getElementById('boldCheck');
+    const italicCheck = document.getElementById('italicCheck');
+    const underlineCheck = document.getElementById('underlineCheck');
+    const customText = document.getElementById('customText');
+    const preview = document.getElementById('preview');
+    const feedback = document.getElementById('feedback');
+    const body = document.body;
+
+    function updateStyle() {
+      preview.style.fontFamily = fontSelect.value;
+      preview.style.fontSize = sizeSelect.value;
+      preview.style.color = colorSelect.value;
+      preview.style.fontWeight = boldCheck.checked ? 'bold' : 'normal';
+      preview.style.fontStyle = italicCheck.checked ? 'italic' : 'normal';
+      preview.style.textDecoration = underlineCheck.checked ? 'underline' : 'none';
+      preview.textContent = customText.value;
+
+      // Simpele beoordeling
+      let score = 0;
+
+      const informalFonts = ['Comic Sans MS'];
+      const flashyColors = ['#FF0000', '#FF69B4'];
+
+      if (informalFonts.includes(fontSelect.value)) score -= 2;
+      if (flashyColors.includes(colorSelect.value)) score -= 2;
+      if (sizeSelect.value === '30px') score -= 1;
+      if (boldCheck.checked) score += 0.5;
+      if (italicCheck.checked) score -= 0.5;
+      if (underlineCheck.checked) score -= 0.5;
+
+      if (score >= 0) {
+        feedback.textContent = "✅ Ziet er professioneel uit.";
+        feedback.className = "feedback-ok";
+        body.style.backgroundColor = "#f0f2f5";
+      } else {
+        feedback.textContent = "❌ Ziet er minder professioneel uit.";
+        feedback.className = "feedback-bad";
+        body.style.backgroundColor = "#b30000";
+      }
+    }
+
+    function resetForm() {
+      fontSelect.value = "Arial";
+      sizeSelect.value = "18px";
+      colorSelect.value = "#000000";
+      boldCheck.checked = false;
+      italicCheck.checked = false;
+      underlineCheck.checked = false;
+      customText.value = "Dit is voorbeeldtekst";
+      updateStyle();
+    }
+
+    // Event listeners
+    fontSelect.addEventListener('change', updateStyle);
+    sizeSelect.addEventListener('change', updateStyle);
+    colorSelect.addEventListener('change', updateStyle);
+    boldCheck.addEventListener('change', updateStyle);
+    italicCheck.addEventListener('change', updateStyle);
+    underlineCheck.addEventListener('change', updateStyle);
+    customText.addEventListener('input', updateStyle);
+
+    updateStyle(); // Eerste keer
+  </script>
+
+</body>
+</html>
