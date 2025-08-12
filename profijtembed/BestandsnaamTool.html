@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bestandsnaam check</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --muted:#94a3b8;
+      --text:#e5e7eb;
+      --accent:#ff7a00;
+      --accent-2:#ffd4ad;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:linear-gradient(120deg, #0b1226 0%, #121b35 100%);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+      color:var(--text);
+      line-height:1.45;
+    }
+    .wrap{max-width:600px;margin:24px auto;padding:16px}
+    .card{background:var(--card); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .grid{display:grid;gap:12px}
+    .row{display:grid;gap:8px}
+    h2.title{color:var(--accent);margin-top:0;margin-bottom:12px;font-size:1.4rem;text-align:center}
+    input[type="text"]{background:#0b1226;color:var(--text);border:1px solid rgba(255,255,255,.18);padding:12px;border-radius:10px;}
+    small{color:var(--muted)}
+    .hint{font-size:.95rem;color:var(--accent-2)}
+    .preview{font-family:ui-monospace, monospace; background:#0b1226;border:1px solid rgba(255,255,255,.12);padding:10px;border-radius:10px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2 class="title">Bestandsnaam Check Tool</h2>
+      <div class="grid">
+        <div class="row">
+          <label for="fname"><strong>Typ een bestandsnaam</strong> (tip: onderwerp_YYYY-MM-DD.ext)</label>
+          <input id="fname" type="text" placeholder="bijv. Rapport_2025-08-12.docx" autocomplete="off" />
+          <small>Vermijd verboden tekens: / \\ * ? " < > |</small>
+          <div id="nameMsg" class="hint" role="status" aria-live="polite"></div>
+          <div class="preview" id="preview">Voorbeeld: Rapport_2025-08-12.docx</div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+(() => {
+  const input = document.getElementById('fname');
+  const msg = document.getElementById('nameMsg');
+  const prev = document.getElementById('preview');
+  const forbidden = /[\\\/*?"<>|]/;
+  input.addEventListener('input', () => {
+    const v = input.value.trim();
+    prev.textContent = v ? ('Voorbeeld: ' + v) : 'Voorbeeld: Rapport_2025-08-12.docx';
+    if(!v){ msg.textContent = ''; return; }
+    if(forbidden.test(v)){
+      msg.textContent = '❌ Gebruik geen / \\ * ? " < > | in de naam.'; return;
+    }
+    const hasDate = /\d{4}-\d{2}-\d{2}/.test(v);
+    const looksVague = /document|nieuw|new|file/i.test(v);
+    if(!hasDate){ msg.textContent = 'ℹ️ Tip: voeg een datum toe in de vorm YYYY-MM-DD.'; }
+    else if(looksVague){ msg.textContent = 'ℹ️ Tip: vervang vage woorden zoals “Document” door iets duidelijkers (bijv. Factuur).'; }
+    else { msg.textContent = '✅ Ziet er goed uit! Duidelijke naam.'; }
+  });
+})();
+</script>
+</body>
+</html>
