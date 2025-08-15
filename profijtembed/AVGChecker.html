@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Mag ik deze gegevens verwerken?</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: auto;
+        background: #f9f9f9;
+        padding: 20px;
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+    .question {
+        margin: 20px 0;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+    .button-container {
+        margin-top: 10px;
+    }
+    button {
+        background: #FF9800; /* Oranje huisstijl */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    button:hover {
+        background: #e68a00; /* Donkerder oranje bij hover */
+    }
+    #result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .ok { background: #d4edda; color: #155724; }
+    .warn { background: #fff3cd; color: #856404; }
+    .no { background: #f8d7da; color: #721c24; }
+</style>
+</head>
+<body>
+
+<h2>Mag ik deze gegevens verwerken?</h2>
+<div id="quiz"></div>
+<div id="result"></div>
+
+<script>
+const questions = [
+    {
+        text: "Heb je deze gegevens echt nodig voor je werk of taak?",
+        yes: 1,
+        no: "no"
+    },
+    {
+        text: "Is het gebruik verplicht volgens de wet?",
+        yes: "ok",
+        no: 2
+    },
+    {
+        text: "Heb je duidelijke toestemming van de persoon?",
+        yes: "ok",
+        no: "warn"
+    }
+];
+
+let currentQuestion = 0;
+
+function showQuestion(index) {
+    const container = document.getElementById("quiz");
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "";
+    resultDiv.className = ""; // Verwijder oude highlight
+    container.innerHTML = "";
+
+    if (typeof index === "string") {
+        showResult(index);
+        return;
+    }
+    const q = questions[index];
+    const questionDiv = document.createElement("div");
+    questionDiv.className = "question";
+    questionDiv.textContent = q.text;
+
+    const buttonContainer = document.createElement("div");
+    buttonContainer.className = "button-container";
+
+    const yesBtn = document.createElement("button");
+    yesBtn.textContent = "Ja";
+    yesBtn.onclick = () => showQuestion(q.yes);
+
+    const noBtn = document.createElement("button");
+    noBtn.textContent = "Nee";
+    noBtn.onclick = () => showQuestion(q.no);
+
+    buttonContainer.appendChild(yesBtn);
+    buttonContainer.appendChild(noBtn);
+    container.appendChild(questionDiv);
+    container.appendChild(buttonContainer);
+}
+
+function showResult(type) {
+    const resultDiv = document.getElementById("result");
+    let text = "";
+    resultDiv.className = "";
+    if (type === "ok") {
+        text = "✅ Je mag de gegevens verwerken.";
+        resultDiv.classList.add("ok");
+    } else if (type === "warn") {
+        text = "⚠️ Je hebt eerst toestemming nodig.";
+        resultDiv.classList.add("warn");
+    } else {
+        text = "❌ Je mag de gegevens niet verwerken.";
+        resultDiv.classList.add("no");
+    }
+    resultDiv.textContent = text;
+
+    // Voeg opnieuw beginnen knop toe
+    const restartBtn = document.createElement("button");
+    restartBtn.textContent = "🔄 Begin opnieuw";
+    restartBtn.onclick = () => showQuestion(0);
+    restartBtn.style.display = "block";
+    restartBtn.style.margin = "15px auto 0 auto";
+    resultDiv.appendChild(document.createElement("br"));
+    resultDiv.appendChild(restartBtn);
+
+    document.getElementById("quiz").innerHTML = "";
+}
+
+showQuestion(currentQuestion);
+</script>
+
+</body>
+</html>
