@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Auteursrecht – Sleep naar de juiste bak</title>
+<style>
+  :root { --bg:#f5f5f7; --card:#ffffff; --ink:#222; --muted:#666; --ok:#1e9e57; --err:#e33; --hint:#0057d9; }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; padding:16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: var(--bg); color: var(--ink);
+  }
+  header { max-width: 900px; margin: 0 auto 16px; }
+  h1 { margin: 0 0 8px; font-size: 1.4rem; }
+  p.lead { margin: 4px 0 12px; color: var(--muted); }
+  .board {
+    display: grid; gap: 16px; max-width: 900px; margin: 0 auto;
+    grid-template-columns: 1fr; 
+  }
+  @media (min-width: 880px) {
+    .board { grid-template-columns: 1.1fr 1fr; }
+  }
+  .stack, .bins {
+    background: var(--card); border-radius: 12px; padding: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+  }
+  .stack h2, .bins h2 { font-size: 1.1rem; margin: 0 0 8px; }
+  .sub { font-size: .9rem; color: var(--muted); margin-bottom: 8px; }
+  .cards {
+    display: grid; gap: 8px; grid-template-columns: 1fr; 
+  }
+  .card {
+    background: #fff; border: 2px dashed #ddd; border-radius: 10px; padding: 12px;
+    cursor: grab; user-select: none; transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .card:active { cursor: grabbing; transform: scale(.98); }
+  .card.dragging { opacity: .85; box-shadow: 0 6px 24px rgba(0,0,0,.12); border-color: #bbb; }
+  .bins-grid { display: grid; gap: 10px; grid-template-columns: 1fr; }
+  @media (min-width: 620px) { .bins-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .bin {
+    min-height: 120px; background: #fafafa; border: 2px solid #e6e6e6; border-radius: 12px; padding: 10px;
+    transition: border-color .2s ease, background .2s ease; display: flex; flex-direction: column; gap: 8px;
+  }
+  .bin h3 { font-size: 1rem; margin: 0; }
+  .bin.dropzone { border-color: var(--hint); background: #eef4ff; }
+  .bin .drop { display: flex; flex-direction: column; gap: 8px; }
+  .chip {
+    display: inline-block; font-size: .82rem; padding: 6px 10px; border-radius: 999px; background: #eef4ff; color: #0b4abf;
+  }
+  .result { margin-top: 8px; min-height: 20px; font-weight: 600; }
+  .result.ok { color: var(--ok); }
+  .result.err { color: var(--err); }
+  .panel {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px;
+  }
+  .score { font-weight: 700; }
+  button.btn {
+    border: 0; background: #111; color: #fff; border-radius: 10px; padding: 10px 14px; cursor: pointer; font-weight: 600;
+  }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  .shake { animation: shake .3s ease; }
+  @keyframes shake { 0%,100%{ transform: translateX(0) } 25%{ transform: translateX(-6px) } 75%{ transform: translateX(6px) } }
+  .confetti {
+    position: fixed; inset: 0; pointer-events: none; display: none;
+  }
+  .confetti.show { display:block; }
+  .a11y-help { font-size:.85rem; color: var(--muted); margin-top: 6px; }
+  /* small badges on cards */
+  .badge { display:inline-block; font-size:.72rem; padding:2px 6px; border-radius:6px; background:#f0f0f0; color:#444; margin-top:6px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Sleep de kaart naar de juiste bak</h1>
+    <p class="lead">Kies: <strong>Toestemming nodig</strong> • <strong>Mag met bronvermelding</strong> • <strong>Vrij te gebruiken</strong>.</p>
+  </header>
+
+  <section class="board">
+    <div class="stack">
+      <h2>Kaarten</h2>
+      <p class="sub">Sleep een kaart naar een bak. Je krijgt direct feedback.</p>
+      <div id="cards" class="cards">
+        <!-- data-cat = juiste categorie: toestemming | bron | vrij -->
+        <div class="card" draggable="true" data-cat="toestemming">
+          Foto gevonden op Google
+          <div class="badge">Onbekende licentie</div>
+        </div>
+        <div class="card" draggable="true" data-cat="bron">
+          Afbeelding met Creative Commons BY
+          <div class="badge">Naamsvermelding nodig</div>
+        </div>
+        <div class="card" draggable="true" data-cat="vrij">
+          Oud schilderij uit 1700
+          <div class="badge">Publiek domein</div>
+        </div>
+        <div class="card" draggable="true" data-cat="toestemming">
+          Muziek downloaden van Spotify
+          <div class="badge">Niet vrij te gebruiken</div>
+        </div>
+        <div class="card" draggable="true" data-cat="vrij">
+          Foto met CC0-licentie
+          <div class="badge">Vrij te gebruiken</div>
+        </div>
+        <div class="card" draggable="true" data-cat="toestemming">
+          Schoollogo van je opleiding
+          <div class="badge">Rechten bij school</div>
+        </div>
+        <div class="card" draggable="true" data-cat="vrij">
+          Eigen foto die jij maakte
+          <div class="badge">Je bent de maker</div>
+        </div>
+        <div class="card" draggable="true" data-cat="bron">
+          Wikipedia-tekst (CC BY-SA)
+          <div class="badge">Bron + zelfde licentie delen</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="score">Score: <span id="score">0</span>/8</div>
+        <button id="reset" class="btn" type="button">Opnieuw</button>
+      </div>
+      <div class="a11y-help">Geen slepen? Tik op een kaart om een bak te kiezen.</div>
+    </div>
+
+    <div class="bins">
+      <h2>Bakken</h2>
+      <div class="bins-grid">
+        <div class="bin" data-accept="toestemming" tabindex="0" aria-label="Toestemming nodig, dropzone">
+          <h3>Toestemming nodig</h3>
+          <span class="chip">Niet zomaar gebruiken</span>
+          <div class="drop"></div>
+          <div class="result" aria-live="polite"></div>
+        </div>
+        <div class="bin" data-accept="bron" tabindex="0" aria-label="Mag met bronvermelding, dropzone">
+          <h3>Mag met bronvermelding</h3>
+          <span class="chip">Noem de maker/licentie</span>
+          <div class="drop"></div>
+          <div class="result" aria-live="polite"></div>
+        </div>
+        <div class="bin" data-accept="vrij" tabindex="0" aria-label="Vrij te gebruiken, dropzone">
+          <h3>Vrij te gebruiken</h3>
+          <span class="chip">Publiek domein / CC0 / Eigen</span>
+          <div class="drop"></div>
+          <div class="result" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <canvas id="confetti" class="confetti"></canvas>
+
+<script>
+  // --- helpers
+  const $ = (sel, root=document)=>root.querySelector(sel);
+  const $$ = (sel, root=document)=>Array.from(root.querySelectorAll(sel));
+
+  const cardsWrap = $('#cards');
+  const scoreEl = $('#score');
+  const resetBtn = $('#reset');
+  const bins = $$('.bin');
+  let score = 0, total = $$('.card').length;
+  let dragging = null;
+
+  function updateScore(delta){
+    score += delta;
+    scoreEl.textContent = score;
+    if(score === total){ celebrate(); }
+  }
+
+  // Drag & Drop
+  $$('.card').forEach(card=>{
+    card.addEventListener('dragstart', e=>{
+      dragging = card;
+      card.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', card.dataset.cat);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', ()=>{
+      dragging = null;
+      card.classList.remove('dragging');
+    });
+    // Tap-to-place (accessibility / mobile friendly)
+    card.addEventListener('click', ()=>{
+      const choice = prompt("Kies bak: 1 = Toestemming, 2 = Bronvermelding, 3 = Vrij");
+      const map = { "1":"toestemming", "2":"bron", "3":"vrij" };
+      if(map[choice]){
+        const target = bins.find(b => b.dataset.accept === map[choice]);
+        if(target) { tryPlace(card, target); }
+      }
+    });
+  });
+
+  bins.forEach(bin=>{
+    bin.addEventListener('dragover', e=>{
+      e.preventDefault();
+      bin.classList.add('dropzone');
+    });
+    bin.addEventListener('dragleave', ()=>{
+      bin.classList.remove('dropzone');
+    });
+    bin.addEventListener('drop', e=>{
+      e.preventDefault();
+      bin.classList.remove('dropzone');
+      if(dragging){ tryPlace(dragging, bin); }
+    });
+  });
+
+  function tryPlace(card, bin){
+    const correct = card.dataset.cat === bin.dataset.accept;
+    const result = $('.result', bin);
+    if(correct){
+      $('.drop', bin).appendChild(card);
+      card.setAttribute('draggable','false');
+      card.style.borderColor = '#cce7d8';
+      card.style.cursor = 'default';
+      card.style.background = '#f7fffa';
+      result.textContent = '✅ Goed geplaatst!';
+      result.classList.remove('err'); result.classList.add('ok');
+      updateScore(1);
+    } else {
+      // bounce and hint
+      card.classList.add('shake');
+      setTimeout(()=>card.classList.remove('shake'), 300);
+      result.textContent = '❌ Niet juist. Denk nog eens na.';
+      result.classList.remove('ok'); result.classList.add('err');
+    }
+  }
+
+  resetBtn.addEventListener('click', ()=>{
+    score = 0; scoreEl.textContent = score;
+    $$('.result').forEach(r=>{ r.textContent=''; r.className='result'; });
+    $$('.card').forEach(c=>{
+      c.setAttribute('draggable','true');
+      c.style = '';
+      cardsWrap.appendChild(c);
+    });
+    stopConfetti();
+  });
+
+  // Simple confetti (no libs)
+  const canvas = $('#confetti');
+  const ctx = canvas.getContext('2d');
+  let confettiPieces = [], rafId = null;
+
+  function celebrate(){
+    startConfetti();
+    // Auto stop after 4s
+    setTimeout(stopConfetti, 4000);
+  }
+
+  function startConfetti(){
+    resizeCanvas();
+    canvas.classList.add('show');
+    confettiPieces = createConfetti(140);
+    tick();
+    window.addEventListener('resize', resizeCanvas);
+  }
+  function stopConfetti(){
+    canvas.classList.remove('show');
+    confettiPieces = [];
+    cancelAnimationFrame(rafId);
+    window.removeEventListener('resize', resizeCanvas);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  function resizeCanvas(){
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  }
+  function createConfetti(n){
+    const a = [];
+    for(let i=0;i<n;i++){
+      a.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*-canvas.height,
+        s: 5 + Math.random()*6,
+        vy: 2 + Math.random()*3,
+        vx: (Math.random()-.5)*1.5,
+        rot: Math.random()*360,
+        vr: (Math.random()-.5)*6
+      });
+    }
+    return a;
+  }
+  function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    confettiPieces.forEach(p=>{
+      p.y += p.vy; p.x += p.vx; p.rot += p.vr;
+      if(p.y > canvas.height + 10){ p.y = -10; p.x = Math.random()*canvas.width; }
+      drawPiece(p);
+    });
+    rafId = requestAnimationFrame(tick);
+  }
+  function drawPiece(p){
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot * Math.PI/180);
+    ctx.fillStyle = ['#111','#1e9e57','#0057d9','#ffb300','#e33'][p.s|0 % 5];
+    ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.6);
+    ctx.restore();
+  }
+</script>
+</body>
+</html>
